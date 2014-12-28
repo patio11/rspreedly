@@ -3,7 +3,7 @@ module RSpreedly
   class Base
     include HTTParty
     format :xml
-    base_uri "https://spreedly.com/api/v4"
+    base_uri "https://subs.pinpayments.com/api/v4"
 
     attr_reader :errors
 
