@@ -145,6 +145,17 @@ module RSpreedly
       true
     end
 
+    # Add the specified fee to the subscriber's next invoice.
+    # For regular subscribers, it will be collected at their next regular payment.
+    # For Metered Plans, this is the next regular payment if you've hit the minimum payment required at that time.
+    #
+    # POST /api/v4[short site name]/subscribers/[subscriber id]/fees.xml
+    def add_fee(name, amount, description = "", group = "")
+      fee = Fee.new(:name => name, :amount => amount, :description => description, :group => group)
+      result = api_request(:post, "/subscribers/#{self.customer_id}/fees.xml", :body => fee.to_xml) rescue nil
+      !!result
+    end
+
     # Give a subscriber a credit (or reduce credit by supplying a negative value (more)
     # POST /api/v4[short site name]/subscribers/[subscriber id]/credits.xml
     def credit(amount)
@@ -176,18 +187,25 @@ module RSpreedly
       true
     end
 
+    # Change the subscription plan of a subscriber
+    # PUT /api/v4/[short site name]/subscribers/[subscriber id]/change_subscription_plan.xml
+    def change_subscription_plan(plan_id)
+      new_plan = RSpreedly::SubscriptionPlan.new(:id => plan_id)
+      !! api_request(:put, "/subscribers/#{self.customer_id}/change_subscription_plan.xml", :body => new_plan.to_xml)
+    end
+
     def grant_lifetime_subscription(feature_level)
       subscription = LifetimeComplimentarySubscription.new(:feature_level => feature_level)
       result = api_request(:post, "/subscribers/#{self.customer_id}/lifetime_complimentary_subscriptions.xml", :body => subscription.to_xml)
       self.attributes = result["subscriber"]
       true
     end
-    
+
     def subscribe_link(subscription_plan_id, screen_name, return_url=nil)
       params = return_url.nil? ? "" : "?return_url=" + return_url
       "https://spreedly.com/#{RSpreedly::Config.site_name}/subscribers/#{self.customer_id}/subscribe/#{subscription_plan_id}/#{screen_name}#{params}"
     end
-    
+
     def subscription_link(return_url=nil)
       params = return_url.nil? ? "" : "?return_url=" + return_url
       "https://spreedly.com/#{RSpreedly::Config.site_name}/subscriber_accounts/#{self.token}#{params}"
