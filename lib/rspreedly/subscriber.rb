@@ -25,6 +25,7 @@ module RSpreedly
                   :store_credit,
                   :store_credit_currency_code,
                   :subscription_plan_name,
+                  :subscription_plan,
                   :token,
                   :updated_at,
                   :invoices
@@ -38,7 +39,9 @@ module RSpreedly
 
         begin
           data = api_request(:get, "/subscribers/#{id}.xml")
-          Subscriber.new(data["subscriber"])
+          sub = Subscriber.new(data["subscriber"])
+          sub.subscription_plan = SubscriptionPlan.new(data["subscriber"]["subscription-plan-version"])
+          sub
         rescue RSpreedly::Error::NotFound
           nil
         end
@@ -232,7 +235,7 @@ module RSpreedly
         :on_trial,     :ready_to_renew,             :recurring,
         :store_credit, :store_credit_currency_code, :subscription_plan_name,
         :token,        :updated_at,                 :ready_to_renew_since,
-        :invoices
+        :invoices,     :subscription_plan
       ]
 
       opts[:exclude] ||= []
