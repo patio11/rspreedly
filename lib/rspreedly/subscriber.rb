@@ -26,6 +26,7 @@ module RSpreedly
                   :store_credit_currency_code,
                   :subscription_plan_name,
                   :subscription_plan,
+                  :subscription_plan_version,
                   :token,
                   :updated_at,
                   :invoices
@@ -235,7 +236,7 @@ module RSpreedly
         :on_trial,     :ready_to_renew,             :recurring,
         :store_credit, :store_credit_currency_code, :subscription_plan_name,
         :token,        :updated_at,                 :ready_to_renew_since,
-        :invoices,     :subscription_plan
+        :invoices,     :subscription_plan,          :subscription_plan_version
       ]
 
       opts[:exclude] ||= []
