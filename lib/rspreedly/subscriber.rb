@@ -40,7 +40,9 @@ module RSpreedly
         begin
           data = api_request(:get, "/subscribers/#{id}.xml")
           sub = Subscriber.new(data["subscriber"])
-          sub.subscription_plan = SubscriptionPlan.new(data["subscriber"]["subscription_plan_version"])
+          if (data["subscriber"]["subscription_plan_version"])
+            sub.subscription_plan = SubscriptionPlan.new(data["subscriber"]["subscription_plan_version"])
+          end
           sub
         rescue RSpreedly::Error::NotFound
           nil
