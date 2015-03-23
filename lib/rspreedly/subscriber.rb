@@ -18,6 +18,8 @@ module RSpreedly
                   :new_customer_id,
                   :on_trial,
                   :payment_method,
+                  :payment_account_on_file,
+                  :payment_account_display,
                   :ready_to_renew,
                   :ready_to_renew_since,
                   :recurring,
