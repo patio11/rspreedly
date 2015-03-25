@@ -104,7 +104,7 @@ module RSpreedly
     # Create a subscriber (more)
     # POST /api/v4/[short site name]/subscribers.xml
     def create!
-      xml = self.to_xml(:exclude => [:payment_account_on_file, :payment_account_display])
+      xml = self.to_xml
       result = api_request(:post, "/subscribers.xml", :body => xml)
       self.attributes = result["subscriber"]
       true
@@ -123,7 +123,7 @@ module RSpreedly
     # Update a Subscriber (more)
     # PUT /api/v4/[short site name]/subscribers/[subscriber id].xml
     def update!
-      !! api_request(:put, "/subscribers/#{self.customer_id}.xml", :body => self.to_xml(:exclude => [:customer_id, :payment_account_on_file, :payment_account_display]))
+      !! api_request(:put, "/subscribers/#{self.customer_id}.xml", :body => self.to_xml(:exclude => [:customer_id]))
     end
 
     def update
@@ -240,7 +240,8 @@ module RSpreedly
         :on_trial,     :ready_to_renew,             :recurring,
         :store_credit, :store_credit_currency_code, :subscription_plan_name,
         :token,        :updated_at,                 :ready_to_renew_since,
-        :invoices,     :subscription_plan
+        :invoices,     :subscription_plan,          :payment_account_display,
+        :payment_account_on_file
       ]
 
       opts[:exclude] ||= []
